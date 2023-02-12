@@ -10,9 +10,8 @@ if (!process.env.OPENAI_API_KEY) {
 }
 
 export default async function handler(req: Request) {
-  const { url } = (await req.json()) as {
-    url?: string;
-  };
+  const { searchParams } = new URL(req.url);
+  const url = searchParams.get("url");
 
   if (!url) {
     return new Response("No prompt in the request", { status: 500 });
@@ -46,7 +45,13 @@ export default async function handler(req: Request) {
     };
 
     const stream = await OpenAIStream(payload);
-    return new Response(stream);
+    return new Response(stream, {
+      status: 200,
+      headers: {
+        "content-type": "application/json",
+        "cache-control": "public, s-maxage=600, stale-while-revalidate=60",
+      },
+    });
   } catch (e: any) {
     console.log({ e });
     return new Response(e, { status: 500 });

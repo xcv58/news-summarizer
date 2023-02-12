@@ -47,13 +47,7 @@ export const Home: NextPage = () => {
       router.replace(curUrl);
     }
     setLoading(true);
-    const response = await fetch("/api/summarize", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ url: url ? url : curArticle }),
-    });
+    const response = await fetch(`/api/summarize?url=${encodeURIComponent(url ? url : curArticle)}`);
 
     if (!response.ok) {
       console.log("error", response.statusText);
@@ -79,23 +73,23 @@ export const Home: NextPage = () => {
   };
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-5xl flex-col pt-8 sm:pt-12">
+    <div className="flex flex-col max-w-5xl min-h-screen pt-8 mx-auto sm:pt-12">
       <Head>
         <title>TechCrunch Summarizer</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
-      <main className="mx-auto mt-10 flex max-w-5xl flex-1 flex-col justify-center px-2 sm:mt-40">
+      <main className="flex flex-col justify-center flex-1 max-w-5xl px-2 mx-auto mt-10 sm:mt-40">
         <a
           target="_blank"
           rel="noreferrer"
-          className="mx-auto mb-5 hidden max-w-fit rounded-full border border-gray-800 px-4 py-1 text-gray-500 transition duration-300 ease-in-out hover:scale-105 hover:border-gray-700 md:block"
+          className="hidden px-4 py-1 mx-auto mb-5 text-gray-500 transition duration-300 ease-in-out border border-gray-800 rounded-full max-w-fit hover:scale-105 hover:border-gray-700 md:block"
           href="https://twitter.com/nutlope/status/1622988173155368960"
         >
           You can also go to a Techcrunch article and add "summary" after
           "techcrunch" in the URL
         </a>
-        <h1 className="max-w-5xl text-center text-4xl font-bold sm:text-7xl">
+        <h1 className="max-w-5xl text-4xl font-bold text-center sm:text-7xl">
           Summarize any{" "}
           <span className="relative whitespace-nowrap text-[#3290EE]">
             <SquigglyLines />
@@ -103,7 +97,7 @@ export const Home: NextPage = () => {
           </span>{" "}
           article with AI
         </h1>
-        <p className="mt-10 text-center text-lg text-gray-500 sm:text-2xl">
+        <p className="mt-10 text-lg text-center text-gray-500 sm:text-2xl">
           Copy and paste any <span className="text-green-500">TechCrunch </span>
           article link below.
         </p>
@@ -111,11 +105,11 @@ export const Home: NextPage = () => {
           type="text"
           value={curArticle}
           onChange={(e) => setCurArticle(e.target.value)}
-          className="mx-auto mt-10 w-full rounded-lg border border-gray-500 bg-black p-3 outline-1 outline-white sm:mt-7 sm:w-3/4"
+          className="w-full p-3 mx-auto mt-10 bg-black border border-gray-500 rounded-lg outline-1 outline-white sm:mt-7 sm:w-3/4"
         />
         {!loading && (
           <button
-            className="z-10 mx-auto mt-7 w-3/4 rounded-2xl border-gray-500 bg-green-500 p-3 text-lg font-medium transition hover:bg-green-400 sm:mt-10 sm:w-1/3"
+            className="z-10 w-3/4 p-3 mx-auto text-lg font-medium transition bg-green-500 border-gray-500 mt-7 rounded-2xl hover:bg-green-400 sm:mt-10 sm:w-1/3"
             onClick={() => generateSummary()}
           >
             Summarize
@@ -123,7 +117,7 @@ export const Home: NextPage = () => {
         )}
         {loading && (
           <button
-            className="z-10 mx-auto mt-7 w-3/4 cursor-not-allowed rounded-2xl border-gray-500 bg-green-500 p-3 text-lg font-medium transition hover:bg-green-400 sm:mt-10 sm:w-1/3"
+            className="z-10 w-3/4 p-3 mx-auto text-lg font-medium transition bg-green-500 border-gray-500 cursor-not-allowed mt-7 rounded-2xl hover:bg-green-400 sm:mt-10 sm:w-1/3"
             disabled
           >
             <div className="flex items-center justify-center text-white">
@@ -142,11 +136,11 @@ export const Home: NextPage = () => {
           toastOptions={{ duration: 2000 }}
         />
         {summary && (
-          <div className="mb-10 px-4">
-            <h2 className="mx-auto mt-16 max-w-3xl border-t border-gray-600 pt-8 text-center text-3xl font-bold sm:text-5xl">
+          <div className="px-4 mb-10">
+            <h2 className="max-w-3xl pt-8 mx-auto mt-16 text-3xl font-bold text-center border-t border-gray-600 sm:text-5xl">
               Summary
             </h2>
-            <div className="mx-auto mt-6 max-w-3xl text-lg leading-7">
+            <div className="max-w-3xl mx-auto mt-6 text-lg leading-7">
               {summary.split(". ").map((sentence, index) => (
                 <div key={index}>
                   {sentence.length > 0 && (
