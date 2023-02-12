@@ -49,7 +49,7 @@ export default async function handler(req: Request) {
       status: 200,
       headers: {
         "content-type": "application/json",
-        "cache-control": "public, s-maxage=600, stale-while-revalidate=60",
+        "cache-control": "public, s-maxage=3600, stale-while-revalidate=60",
       },
     });
   } catch (e: any) {
